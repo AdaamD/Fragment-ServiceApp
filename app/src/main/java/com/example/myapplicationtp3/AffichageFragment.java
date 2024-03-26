@@ -9,15 +9,22 @@ import android.widget.TextView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.File;
 import android.os.Bundle;
 import android.widget.Button;
 import java.io.FileWriter;
+
+import org.json.JSONException;
 import org.json.JSONObject;
+import android.content.Context;
+
 public class AffichageFragment extends Fragment {
     private TextView textViewNom, textViewPrenom, textViewDateNaissance, textViewTelephone, textViewEmail, textViewCentresInteret, textViewSynchronisation;
     private Button buttonValider;
+
 
     public AffichageFragment() {}
 
@@ -77,36 +84,93 @@ public class AffichageFragment extends Fragment {
         buttonValider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Récupérer les données saisies
+                String nom = textViewNom.getText().toString();
+                String prenom = textViewPrenom.getText().toString();
+                String dateNaissance = textViewDateNaissance.getText().toString();
+                String telephone = textViewTelephone.getText().toString();
+                String email = textViewEmail.getText().toString();
+                String centresInteret = textViewCentresInteret.getText().toString();
+                String synchronisation = textViewSynchronisation.getText().toString();
+
+                // Enregistrer les données dans un fichier texte
+                saveDataToTextFile(nom, prenom, dateNaissance, telephone, email, centresInteret, synchronisation);
+                saveDataToJsonFile(nom, prenom, dateNaissance, telephone, email, centresInteret, synchronisation);
 
                 // Envoyer un message de confirmation à l'utilisateur
-                Toast.makeText(getActivity(), "Données validées !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Données validées et enregistrées !", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        Button buttonRetour = view.findViewById(R.id.buttonRetour);
+
+        buttonRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Cacher le fragment Affichage lors du clic sur le bouton de retour
+                getActivity().getSupportFragmentManager().beginTransaction().hide(AffichageFragment.this).commit();
             }
         });
 
         return view;
     }
 
-    private void saveDataToJsonFile(JSONObject data) {
-        // Créer un répertoire de stockage de fichiers
-        File directory = new File(getActivity().getExternalFilesDir(null) + "/data");
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+    private void saveDataToTextFile(String nom, String prenom, String dateNaissance, String telephone, String email,  String centresInteret ,String synchronisation) {
+        // Créer le contenu du fichier texte avec les données saisies
+        StringBuilder builder = new StringBuilder();
+        builder.append("Nom : ").append(nom).append("\n");
+        builder.append("Prénom : ").append(prenom).append("\n");
+        builder.append("Date de naissance : ").append(dateNaissance).append("\n");
+        builder.append("Téléphone : ").append(telephone).append("\n");
+        builder.append("Email : ").append(email).append("\n");
+        builder.append("Centre d'Interet : ").append(centresInteret).append("\n");
+        builder.append("Synchronisation : ").append(synchronisation).append("\n");
 
-        // Créer un fichier JSON
-        File file = new File(directory, "data.json");
+        // Écrire les données dans un fichier dans le dossier de l'application
         try {
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(data.toString());
-            fileWriter.flush();
-            fileWriter.close();
-            Toast.makeText(getActivity(), "Données enregistrées dans le fichier JSON !", Toast.LENGTH_SHORT).show();
+            FileOutputStream outputStream = getActivity().openFileOutput("donnees.txt", Context.MODE_APPEND);
+            outputStream.write(builder.toString().getBytes());
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), "Erreur lors de l'enregistrement des données !", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void saveDataToJsonFile(String nom, String prenom, String dateNaissance, String telephone, String email, String centresInteret, String synchronisation) {
+        try {
+            // Créer un objet JSON pour stocker les données
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("nom", nom);
+            jsonObject.put("prenom", prenom);
+            jsonObject.put("dateNaissance", dateNaissance);
+            jsonObject.put("telephone", telephone);
+            jsonObject.put("email", email);
+            jsonObject.put("Centre d'Interet :", centresInteret);
+            jsonObject.put("synchronisation", synchronisation);
+
+            // Convertir l'objet JSON en une chaîne JSON
+            String jsonData = jsonObject.toString();
+
+            // Ouvrir un flux de sortie vers le fichier texte
+            FileOutputStream outputStream = getActivity().openFileOutput("donnees.json", Context.MODE_PRIVATE);
+            // Écrire les données JSON dans le fichier
+            outputStream.write(jsonData.getBytes());
+            outputStream.close();
+
+            // Envoyer un message de confirmation à l'utilisateur
+            Toast.makeText(getActivity(), "Données validées et enregistrées au format JSON !", Toast.LENGTH_SHORT).show();
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), "Erreur lors de la sauvegarde des données au format JSON !", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+
+
+
 
 
 }
