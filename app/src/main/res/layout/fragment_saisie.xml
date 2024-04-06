@@ -173,14 +173,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_alignParentStart="true"/>
 
-            <Button
-                android:id="@+id/buttonTelecharger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Télécharger"
-                android:layout_below="@id/radioGroupSynchronisation"
-                android:layout_marginTop="16dp"
-                android:layout_toEndOf="@id/buttonSoumettre"/>
 
         </RelativeLayout>
     </ScrollView>

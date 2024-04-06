@@ -1,11 +1,9 @@
 package com.example.myapplicationtp3;
-import android.os.Environment;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
-import android.content.pm.PackageManager;
-
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,28 +12,23 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
-
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.BufferedInputStream;
-import android.os.AsyncTask;
 import java.net.URL;
 import java.net.URLConnection;
-import androidx.core.app.ActivityCompat;
 
 public class SaisieFragment extends Fragment {
     private EditText editTextNom, editTextPrenom, editTextDateNaissance, editTextTelephone, editTextEmail;
     private CheckBox checkBoxSport, checkBoxMusique, checkBoxLecture;
     private Switch switchSynchronisation;
     private Button buttonSoumettre;
-    private Button buttonTelecharger;
 
     public SaisieFragment() {}
 
@@ -96,18 +89,21 @@ public class SaisieFragment extends Fragment {
             }
         });
 
-        /*buttonTelecharger.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DownloadFileFromURL().execute("https://samples.openweathermap.org/data/2.5/weather?q=London&appid=b6907d289e10d714a6e88b30761fae22");
 
-
-            }
-        });*/
 
 
         return view;
     }
+
+    public String getNom() {
+        return editTextNom.getText().toString();
+    }
+
+    // Méthode pour récupérer le prénom saisi
+    public String getPrenom() {
+        return editTextPrenom.getText().toString();
+    }
+
     private class DownloadFileFromURL extends AsyncTask<String, String, String> {
 
         @Override
@@ -148,12 +144,10 @@ public class SaisieFragment extends Fragment {
         }
 
         protected void onProgressUpdate(String... progress) {
-            // Mettre à jour la barre de progression ou un message de progression
         }
 
         @Override
         protected void onPostExecute(String file_url) {
-            // Afficher un message de téléchargement terminé ou effectuer une action après le téléchargement
         }
     }
     private void enregistrerDonnees(String nom, String prenom, String dateNaissance, String telephone, String email, boolean sport, boolean musique, boolean lecture, boolean synchronisation) {

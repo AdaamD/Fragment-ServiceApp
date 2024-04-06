@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/container"
         android:nestedScrollingEnabled="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".MainActivity">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="100dp"
-            android:text="Application Fragment">
-
-        </EditText>
 
         <FrameLayout
             android:id="@+id/fragment_container_1"
@@ -30,6 +23,14 @@
             android:layout_width="400dp"
             android:layout_height="400dp"
             android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/startDownloadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Download"
+            android:layout_gravity="center" />
+
 
     </LinearLayout>
 </ScrollView>
